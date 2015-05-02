@@ -60,7 +60,7 @@ $(document).on('pagecreate', '#dirwalker', function() {
             dirs.listview('refresh');
             dirs.trigger('updatelayout');
             
-            
+            // update breadcrumb
             breadcrumbe.html(crumbs[0]);
             html='';
             $.each(crumbs, function createCrumb(i, v) {
