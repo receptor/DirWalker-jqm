@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="">
+
+<head>
+
+    <title>DirWalker</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script type="text/template" id="itemTemplate">
+        <li data-isdir="{1}" data-path="{0}">
+            <a href="#">
+                <img src="{2}" class="ui-li-icon" />
+                <h3 class="name">{3}</h3>
+                <p class="info">{4}, {5}</p>
+                <span class="ui-li-count">{6}</span>
+            </a>
+            <a href="#"></a>
+        </li>
+    </script>
+    
+    <script type="text/template" id="crumbTemplate">
+        <li data-icon="false" data-path="{0}">
+            <a href="#">
+                <h3 class="name">{0}</h3>
+            </a>
+        </li>
+    </script>
+
+</head>
+
+<body>
+
+    <div id="dirwalker" data-role="page">
+
+        <div data-role="header" data-position="fixed" class="ui-bar">
+            
+            <!--<h1 id="title">DirWalker</h1>-->
+            <!--<a id="home" href="#" class="ui-btn ui-btn-right ui-shadow ui-nodisc-icon ui-corner-all ui-btn-icon-notext ui-alt-icon ui-icon-home">Home</a>-->
+            
+            <div class="ui-nodisc-icon ui-alt-icon">
+                
+                <a id="back" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-back ui-btn-icon-notext ui-btn-inline">Back</a>
+                <a id="search" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-notext ui-btn-inline">Search</a>
+                <a id="home" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-home ui-btn-icon-notext ui-btn-inline">Home</a>
+                
+                <a href="#favMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">Fav</a>
+    			<div data-role="popup" id="favMenu">
+    					<ul data-role="listview" data-inset="true" style="min-width:210px;">
+    						<li data-role="list-divider">Bookmarks</li>
+    						<li><a href="#">Add current</a></li>
+    					</ul>
+    			</div>
+                
+                <a id="breadcrumbe" style="min-width:100%;max-width:100%;" href="#crumbsMenu" data-rel="popup" class="ui-btn ui-btn-inline ui-shadow ui-corner-all">/</a>
+    			<div data-role="popup" id="crumbsMenu">
+    					<ul id="crumbsList" data-role="listview" data-inset="true" style="min-width:210px;">
+    						<li data-role="list-divider">Path</li>
+    					</ul>
+    			</div>
+    			
+            </div>
+            
+            <form id="searchform" class="ui-filterable" style="display:none;">
+                <input id="searchbox" data-type="search" placeholder="Search" />
+                <!-- TODO: recalc status bar on filter -->
+            </form>
+            
+        </div>
+
+        <div role="main" class="ui-content">
+            <ul id="dirs" data-split-icon="gear" data-role="listview" data-filter="true" data-input="#searchbox" />
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <h4 id="footer">Powered by Go / JQuery Mobile</h4>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
