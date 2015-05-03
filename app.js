@@ -63,7 +63,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             $.each(res.items, function createFile(i, item) {
 
                 item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
-                item.Size += parseInt(item.Size);
+                item.Size = parseInt(item.Size);
                 html += tpl(item);
                 
             });
