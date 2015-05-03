@@ -128,12 +128,17 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
 
     // delete bookmark handler
     listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), bookmarks);
-    $('#bookmarkList a[data-action="deleteBookmark"]').on('click', function(e) {
+    $('#bookmarkList').delegate('a[data-action="deleteBookmark"]', 'click', function(e) {
         if (confirm('Delete bookmark?')) {
             bookmarks.splice($.inArray($(this).attr('data-path'), bookmarks), 1);
             localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
             $(this).parent().remove();
         }
+    });
+    
+    $('#bookmarkList').delegate('a[data-action="gotoBookmark"]', 'click', function(e) {
+        fetchDir($(this).parent().attr('data-path'));
+        $('#bookmarkMenu').popup('close');
     });
 
     // start
