@@ -30,18 +30,17 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         var i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
-    
-    function listviewAdd(list, template, data)
-    {
+
+    function listviewAdd(list, template, data) {
         var html = [];
         $.each(data, function createItem(idx, item) {
             html += template.format(item);
-            });
+        });
         list.append(html);
         list.listview('refresh');
         list.trigger('updatelayout');
     };
-    
+
     function fetchDir(path) {
 
         $.mobile.loading('show');
@@ -107,12 +106,12 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
     back.on('click', function(e) {
         fetchDir(parent);
     });
-    
+
     addBookmark.on('click', function(e) {
         var cwd = localStorage.getItem('cwd');
         bookmarks.push(cwd);
         localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-        listviewAdd($("#bookmarkList"), $('#crumbTemplate').html(), [cwd]);
+        listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), [cwd]);
     });
 
     $("#search").on('click', function(e) {
@@ -126,7 +125,17 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
     $("#dirs").on("filterablefilter", function(event, ui) {
         console.log('filter', ui)
     });
-    
-    listviewAdd($("#bookmarkList"), $('#crumbTemplate').html(), bookmarks)
+
+    // delete bookmark handler
+    listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), bookmarks);
+    $('#bookmarkList a[data-action="deleteBookmark"]').on('click', function(e) {
+        if (confirm('Delete bookmark?')) {
+            bookmarks.splice($.inArray($(this).attr('data-path'), bookmarks), 1);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            $(this).parent().remove();
+        }
+    });
+
+    // start
     fetchDir(localStorage.getItem('cwd') || '/');
 });

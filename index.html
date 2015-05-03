@@ -34,7 +34,15 @@
     <!--Breadcrumb template-->
     <script type="text/template" id="crumbTemplate">
         <li data-icon="false" data-path="{0}">
-            <a href="#">{0}</a>
+            <a href="#"><p><strong>{0}</strong></p></a>
+        </li>
+    </script>
+    
+    <!--Bookmark template-->
+    <script type="text/template" id="bookmarkTemplate">
+        <li data-path="{0}">
+            <a href="#"><p><strong>{0}</strong></p></a>
+            <a data-action="deleteBookmark" href="#" title="Delete"/>
         </li>
     </script>
 
@@ -59,9 +67,9 @@
                 <!--Bookmarks-->
                 <a href="#bookmarkMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">Bookmarks</a>
                 <div data-role="popup" id="bookmarkMenu">
-                    <ul id="bookmarkList" data-role="listview" data-inset="true" style="min-width:210px;">
+                    <ul id="bookmarkList" data-role="listview"  data-split-icon="delete" data-inset="true" style="min-width:210px;">
                         <li data-role="list-divider">Bookmarks</li>
-                        <li data-theme="b"><a id="addBookmark" href="#">Add</a></li>
+                        <li data-theme="b" data-icon="false"><a id="addBookmark" href="#">Add</a></li>
                     </ul>
                 </div>
 
