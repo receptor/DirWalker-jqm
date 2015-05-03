@@ -18,7 +18,6 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         addBookmark = $('#addBookmark'),
         footer = $('#footer'),
         breadcrumbe = $('#breadcrumbe'),
-        crumbsList = $('#crumbsList'),
         parent = '',
         bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [],
         history = [];
@@ -31,12 +30,12 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
 
-    function listviewAdd(list, template, data) {
+    function listviewAdd(list, template, data, replace) {
         var html = [];
         $.each(data, function createItem(idx, item) {
             html += template.format(item);
         });
-        list.append(html);
+        replace ? list.html(html) : list.append(html);
         list.listview('refresh');
         list.trigger('updatelayout');
     };
@@ -50,7 +49,6 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         }).then(function ajaxResponse(res) {
 
             var itemTemplate = $('#itemTemplate').html(),
-                crumbTemplate = $('#crumbTemplate').html(),
                 crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
                     // fix breadcrumb[1] has empty element
                     return v !== ''
@@ -76,13 +74,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
 
             // update breadcrumb
             breadcrumbe.html(crumbs[0]);
-            html = '';
-            $.each(crumbs, function createCrumb(i, v) {
-                html += crumbTemplate.format(v);
-            });
-            crumbsList.html(html);
-            crumbsList.listview('refresh');
-            crumbsList.trigger('updatelayout');
+            listviewAdd($('#crumbsList'), $('#crumbTemplate').html(), crumbs, true);
 
             history.push(res.header.Path);
             footer.html(res.items.length + ' items, ' + bytesToSize(size));
@@ -94,7 +86,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         if ($(this).attr('data-isdir') === 'true') fetchDir($(this).attr('data-path'));
     });
 
-    crumbsList.on('click', 'li', function(e) {
+    $('#crumbsList').on('click', 'li', function(e) {
         fetchDir($(this).attr('data-path'));
         $('#crumbsMenu').popup('close');
     });
