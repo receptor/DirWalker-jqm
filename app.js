@@ -1,12 +1,4 @@
-String.prototype.format = String.prototype.f = function() {
-    var s = this,
-        i = arguments.length;
-
-    while (i--) {
-        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
-    }
-    return s;
-};
+/* global doT */
 
 // app start
 $(document).on('pagecreate', '#dirwalker', function walk() {
@@ -30,10 +22,16 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
 
+    /**
+     * Add items to a listview.
+     * Applies template to an array of data elements
+     * will replace items if replace is true
+     */
     function listviewAdd(list, template, data, replace) {
-        var html = [];
+        var html = [],
+            tpl = doT.template(template);
         $.each(data, function createItem(idx, item) {
-            html += template.format(item);
+            html += tpl(item);
         });
         replace ? list.html(html) : list.append(html);
         list.listview('refresh');
@@ -48,7 +46,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             dataType: 'json'
         }).then(function ajaxResponse(res) {
 
-            var itemTemplate = $('#itemTemplate').html(),
+            var tpl = doT.template($('#itemTemplate').html()),
                 crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
                     // fix breadcrumb[1] has empty element
                     return v !== ''
@@ -62,11 +60,12 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             parent = crumbs[1] || crumbs[0] || '/';
 
             // update dirs view
-            $.each(res.items, function createFile(i, v) {
+            $.each(res.items, function createFile(i, item) {
 
-                var img = v.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
-                size += parseInt(v.Size);
-                html += itemTemplate.format(v.Path, v.IsDir, img, v.Name, v.Mode, v.ModTime, bytesToSize(v.Size));
+                item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
+                item.Size += parseInt(item.Size);
+                html += tpl(item);
+                
             });
             dirs.html(html);
             dirs.listview('refresh');
@@ -127,10 +126,10 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             $(this).parent().remove();
         }
     });
-    
+
     $('#bookmarkList').delegate('a[data-action="gotoBookmark"]', 'click', function(e) {
-        fetchDir($(this).parent().attr('data-path'));
         $('#bookmarkMenu').popup('close');
+        fetchDir($(this).parent().attr('data-path'));
     });
 
     // start

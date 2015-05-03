@@ -16,16 +16,17 @@
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/dot/1.0.3/doT.min.js"></script>
 
     <!--File entry template-->
     <script type="text/template" id="itemTemplate">
-        <li data-isdir="{1}" data-path="{0}">
+        <li data-isdir="{{=it.IsDir}}" data-path="{{=it.Path}}">
             <a href="#">
-                <img src="{2}" class="ui-li-icon" />
-                <h4 class="name">{3}</h4>
-                <!--<p class="info">{4}</p>-->
-                <p class="info">{5}</p>
-                <span class="ui-li-count">{6}</span>
+                <img src="{{=it.Img}}" class="ui-li-icon" />
+                <h4 class="name">{{=it.Name}}</h4>
+                <!--<p class="info">{{=it.Mode}}</p>-->
+                <p class="info">{{=it.ModTime}}</p>
+                <span class="ui-li-count">{{=it.Size}}</span>
             </a>
             <a href="#"></a>
         </li>
@@ -33,15 +34,15 @@
 
     <!--Breadcrumb template-->
     <script type="text/template" id="crumbTemplate">
-        <li data-icon="false" data-path="{0}">
-            <a href="#"><p><strong>{0}</strong></p></a>
+        <li data-icon="false" data-path="{{=it}}">
+            <a href="#"><p><strong>{{=it}}</strong></p></a>
         </li>
     </script>
     
     <!--Bookmark template-->
     <script type="text/template" id="bookmarkTemplate">
-        <li data-path="{0}">
-            <a data-action="gotoBookmark" href="#"><p><strong>{0}</strong></p></a>
+        <li data-path="{{=it}}">
+            <a data-action="gotoBookmark" href="#"><p><strong>{{=it}}</strong></p></a>
             <a data-action="deleteBookmark" href="#" title="Delete"/>
         </li>
     </script>
