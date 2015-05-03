@@ -3,7 +3,8 @@
 // app start
 $(document).on('pagecreate', '#dirwalker', function walk() {
 
-    var backendUrl = 'http://dirwalker-receptor.c9.io/?dir=',
+    var dirWalker = {},
+        backendUrl = 'http://dirwalker-receptor.c9.io/?dir=',
         dirs = $('#dirs'),
         home = $('#home'),
         back = $('#back'),
@@ -11,8 +12,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         footer = $('#footer'),
         breadcrumbe = $('#breadcrumbe'),
         parent = '',
-        bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [],
-        history = [];
+        bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
 
     function bytesToSize(bytes) {
         if (bytes == 0) return '0 Byte';
@@ -46,12 +46,10 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             dataType: 'json'
         }).then(function ajaxResponse(res) {
 
-            var tpl = doT.template($('#itemTemplate').html()),
-                crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
+            var crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
                     // fix breadcrumb[1] has empty element
                     return v !== ''
                 }),
-                html = '',
                 size = 0;
 
             console.log(res);
@@ -61,21 +59,17 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
 
             // update dirs view
             $.each(res.items, function createFile(i, item) {
-
                 item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
-                item.Size = parseInt(item.Size);
-                html += tpl(item);
-                
+                item.Size = parseInt(item.Size),
+                size += item.Size,
+                item.Size = bytesToSize(item.Size);
             });
-            dirs.html(html);
-            dirs.listview('refresh');
-            dirs.trigger('updatelayout');
+            listviewAdd(dirs, $('#itemTemplate').html(), res.items, true);
 
             // update breadcrumb
             breadcrumbe.html(crumbs[0]);
             listviewAdd($('#crumbsList'), $('#crumbTemplate').html(), crumbs, true);
 
-            history.push(res.header.Path);
             footer.html(res.items.length + ' items, ' + bytesToSize(size));
             $.mobile.loading('hide');
         });
