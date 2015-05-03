@@ -8,17 +8,20 @@ String.prototype.format = String.prototype.f = function() {
     return s;
 };
 
-$(document).on('pagecreate', '#dirwalker', function() {
+// app start
+$(document).on('pagecreate', '#dirwalker', function walk() {
 
     var backendUrl = 'http://dirwalker-receptor.c9.io/?dir=',
         dirs = $('#dirs'),
         home = $('#home'),
         back = $('#back'),
+        addBookmark = $('#addBookmark'),
         footer = $('#footer'),
-        parent = '',
         breadcrumbe = $('#breadcrumbe'),
         crumbsList = $('#crumbsList'),
-        history=[];
+        parent = '',
+        bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [],
+        history = [];
 
     function bytesToSize(bytes) {
         if (bytes == 0) return '0 Byte';
@@ -27,7 +30,18 @@ $(document).on('pagecreate', '#dirwalker', function() {
         var i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
-
+    
+    function listviewAdd(list, template, data)
+    {
+        var html = [];
+        $.each(data, function createItem(idx, item) {
+            html += template.format(item);
+            });
+        list.append(html);
+        list.listview('refresh');
+        list.trigger('updatelayout');
+    };
+    
     function fetchDir(path) {
 
         $.mobile.loading('show');
@@ -36,19 +50,20 @@ $(document).on('pagecreate', '#dirwalker', function() {
             dataType: 'json'
         }).then(function ajaxResponse(res) {
 
-            console.log(res);
-            localStorage.setItem('cwd', res.header.Path);
             var itemTemplate = $('#itemTemplate').html(),
                 crumbTemplate = $('#crumbTemplate').html(),
-                crumbs = res.header.Breadcrumb.filter(function(v) {
+                crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
                     // fix breadcrumb[1] has empty element
                     return v !== ''
                 }),
                 html = '',
                 size = 0;
 
+            console.log(res);
+            localStorage.setItem('cwd', res.header.Path);
+
             parent = crumbs[1] || crumbs[0] || '/';
-            
+
             // update dirs view
             $.each(res.items, function createFile(i, v) {
 
@@ -59,17 +74,17 @@ $(document).on('pagecreate', '#dirwalker', function() {
             dirs.html(html);
             dirs.listview('refresh');
             dirs.trigger('updatelayout');
-            
+
             // update breadcrumb
             breadcrumbe.html(crumbs[0]);
-            html='';
+            html = '';
             $.each(crumbs, function createCrumb(i, v) {
                 html += crumbTemplate.format(v);
             });
             crumbsList.html(html);
             crumbsList.listview('refresh');
             crumbsList.trigger('updatelayout');
-            
+
             history.push(res.header.Path);
             footer.html(res.items.length + ' items, ' + bytesToSize(size));
             $.mobile.loading('hide');
@@ -79,7 +94,7 @@ $(document).on('pagecreate', '#dirwalker', function() {
     dirs.on('click', 'li', function(e) {
         if ($(this).attr('data-isdir') === 'true') fetchDir($(this).attr('data-path'));
     });
-    
+
     crumbsList.on('click', 'li', function(e) {
         fetchDir($(this).attr('data-path'));
         $('#crumbsMenu').popup('close');
@@ -93,16 +108,25 @@ $(document).on('pagecreate', '#dirwalker', function() {
         fetchDir(parent);
     });
     
+    addBookmark.on('click', function(e) {
+        var cwd = localStorage.getItem('cwd');
+        bookmarks.push(cwd);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        listviewAdd($("#bookmarkList"), $('#crumbTemplate').html(), [cwd]);
+    });
+
     $("#search").on('click', function(e) {
-        $('#searchform').toggle(0,function(){
+        $('#searchform').toggle(0, function() {
+            // remove filter on search hide
             $('#searchform input[data-type="search"]').val('');
             $('#searchform input[data-type="search"]').trigger("keyup");
-        }).trigger( "updatelayout" );
+        }).trigger("updatelayout");
+    });
+
+    $("#dirs").on("filterablefilter", function(event, ui) {
+        console.log('filter', ui)
     });
     
-    $( "#dirs" ).on( "filterablefilter", function( event, ui ) {
-        console.log('filter', ui)
-    } );
-
+    listviewAdd($("#bookmarkList"), $('#crumbTemplate').html(), bookmarks)
     fetchDir(localStorage.getItem('cwd') || '/');
 });

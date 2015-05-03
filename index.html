@@ -22,8 +22,9 @@
         <li data-isdir="{1}" data-path="{0}">
             <a href="#">
                 <img src="{2}" class="ui-li-icon" />
-                <h3 class="name">{3}</h3>
-                <p class="info">{4}, {5}</p>
+                <h4 class="name">{3}</h4>
+                <!--<p class="info">{4}</p>-->
+                <p class="info">{5}</p>
                 <span class="ui-li-count">{6}</span>
             </a>
             <a href="#"></a>
@@ -33,9 +34,7 @@
     <!--Breadcrumb template-->
     <script type="text/template" id="crumbTemplate">
         <li data-icon="false" data-path="{0}">
-            <a href="#">
-                <h3 class="name">{0}</h3>
-            </a>
+            <a href="#">{0}</a>
         </li>
     </script>
 
@@ -60,10 +59,9 @@
                 <!--Bookmarks-->
                 <a href="#bookmarkMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">Bookmarks</a>
                 <div data-role="popup" id="bookmarkMenu">
-                    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+                    <ul id="bookmarkList" data-role="listview" data-inset="true" style="min-width:210px;">
                         <li data-role="list-divider">Bookmarks</li>
-                        <li><a href="#">Add current</a>
-                        </li>
+                        <li data-theme="b"><a id="addBookmark" href="#">Add</a></li>
                     </ul>
                 </div>
 
