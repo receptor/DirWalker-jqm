@@ -53,10 +53,9 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
 
         // update dirs view
         $.each(dir.items, function createFile(i, item) {
-            item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
-            item.Size = parseInt(item.Size),
-                size += item.Size,
-                item.Size = bytesToSize(item.Size);
+            item.Img = item.IsDir === true ? 'img/folder-closed.png' : 'img/file.png';
+            size += item.Size,
+            item.Size = bytesToSize(item.Size);
         });
         listviewAdd(dirs, $('#itemTemplate').html(), dir.items, true);
 
