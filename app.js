@@ -7,7 +7,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         backendUrl = 'http://dirwalker-receptor.c9.io/?dir=',
         dirs = $('#dirs'),
         home = $('#home'),
-        back = $('#back'),
+        up = $('#up'),
         addBookmark = $('#addBookmark'),
         footer = $('#footer'),
         breadcrumbe = $('#breadcrumbe'),
@@ -46,7 +46,7 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             }),
             size = 0;
 
-        console.log(dir);
+        console.log('setDir',dir);
         localStorage.setItem('cwd', dir.header.Path);
 
         parent = crumbs[1] || crumbs[0] || '/';
@@ -90,17 +90,10 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         fetchDir('/');
     });
 
-    back.on('click', function(e) {
+    up.on('click', function(e) {
         fetchDir(parent);
     });
-
-    addBookmark.on('click', function(e) {
-        var cwd = localStorage.getItem('cwd');
-        bookmarks.push(cwd);
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-        listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), [cwd]);
-    });
-
+    
     $("#search").on('click', function(e) {
         $('#searchform').toggle(0, function() {
             // remove filter on search hide
@@ -108,12 +101,14 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             $('#searchform input[data-type="search"]').trigger("keyup");
         }).trigger("updatelayout");
     });
-
-    $("#dirs").on("filterablefilter", function(event, ui) {
-        console.log('filter', ui)
+    
+    addBookmark.on('click', function(e) {
+        var cwd = localStorage.getItem('cwd');
+        bookmarks.push(cwd);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), [cwd]);
     });
-
-    // delete bookmark handler
+    
     listviewAdd($("#bookmarkList"), $('#bookmarkTemplate').html(), bookmarks);
     $('#bookmarkList').delegate('a[data-action="deleteBookmark"]', 'click', function(e) {
         if (confirm('Delete bookmark?')) {
