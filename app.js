@@ -38,41 +38,43 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
         list.trigger('updatelayout');
     };
 
+    function setDir(dir) {
+
+        var crumbs = dir.header.Breadcrumb.filter(function removeEmpty(v) {
+                // fix breadcrumb[1] has empty element
+                return v !== ''
+            }),
+            size = 0;
+
+        console.log(dir);
+        localStorage.setItem('cwd', dir.header.Path);
+
+        parent = crumbs[1] || crumbs[0] || '/';
+
+        // update dirs view
+        $.each(dir.items, function createFile(i, item) {
+            item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
+            item.Size = parseInt(item.Size),
+                size += item.Size,
+                item.Size = bytesToSize(item.Size);
+        });
+        listviewAdd(dirs, $('#itemTemplate').html(), dir.items, true);
+
+        // update breadcrumb
+        breadcrumbe.html(crumbs[0]);
+        listviewAdd($('#crumbsList'), $('#crumbTemplate').html(), crumbs, true);
+
+        footer.html(dir.items.length + ' items, ' + bytesToSize(size));
+        $.mobile.loading('hide');
+    };
+
     function fetchDir(path) {
 
         $.mobile.loading('show');
         $.ajax({
             url: backendUrl + path,
             dataType: 'json'
-        }).then(function ajaxResponse(res) {
-
-            var crumbs = res.header.Breadcrumb.filter(function removeEmpty(v) {
-                    // fix breadcrumb[1] has empty element
-                    return v !== ''
-                }),
-                size = 0;
-
-            console.log(res);
-            localStorage.setItem('cwd', res.header.Path);
-
-            parent = crumbs[1] || crumbs[0] || '/';
-
-            // update dirs view
-            $.each(res.items, function createFile(i, item) {
-                item.Img = item.IsDir === 'true' ? 'img/folder-closed.png' : 'img/file.png';
-                item.Size = parseInt(item.Size),
-                size += item.Size,
-                item.Size = bytesToSize(item.Size);
-            });
-            listviewAdd(dirs, $('#itemTemplate').html(), res.items, true);
-
-            // update breadcrumb
-            breadcrumbe.html(crumbs[0]);
-            listviewAdd($('#crumbsList'), $('#crumbTemplate').html(), crumbs, true);
-
-            footer.html(res.items.length + ' items, ' + bytesToSize(size));
-            $.mobile.loading('hide');
-        });
+        }).then(setDir);
     }
 
     dirs.on('click', 'li', function(e) {
