@@ -4,7 +4,7 @@
 $(document).on('pagecreate', '#dirwalker', function walk() {
 
     var dirWalker = {},
-        backendUrl = 'http://dirwalker-receptor.c9.io/?dir=',
+        backendUrl = 'http://dirwalker-receptor.c9.io/',
         dirs = $('#dirs'),
         home = $('#home'),
         up = $('#up'),
@@ -71,8 +71,13 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
 
         $.mobile.loading('show');
         $.ajax({
-            url: backendUrl + path,
-            dataType: 'json'
+            url: backendUrl,
+            dataType: 'json',
+            data: {
+                dir: path,
+                sort: $('input:radio[name=settings-sort]:checked').val() || 'Name',
+                sd: $('input:radio[name=settings-sortdir]:checked').val() || false
+            }
         }).then(setDir);
     }
 

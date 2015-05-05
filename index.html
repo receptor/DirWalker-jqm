@@ -35,15 +35,21 @@
     <!--Breadcrumb template-->
     <script type="text/template" id="crumbTemplate">
         <li data-icon="false" data-path="{{=it}}">
-            <a href="#"><p><strong>{{=it}}</strong></p></a>
+            <a href="#">
+                <p><strong>{{=it}}</strong>
+                </p>
+            </a>
         </li>
     </script>
-    
+
     <!--Bookmark template-->
     <script type="text/template" id="bookmarkTemplate">
         <li data-path="{{=it}}">
-            <a data-action="gotoBookmark" href="#"><p><strong>{{=it}}</strong></p></a>
-            <a data-action="deleteBookmark" href="#" title="Delete"/>
+            <a data-action="gotoBookmark" href="#">
+                <p><strong>{{=it}}</strong>
+                </p>
+            </a>
+            <a data-action="deleteBookmark" href="#" title="Delete" />
         </li>
     </script>
 
@@ -64,13 +70,15 @@
                 <a id="up" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-back ui-btn-icon-notext ui-btn-inline">Up</a>
                 <a id="search" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-notext ui-btn-inline">Search</a>
                 <a id="home" href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-home ui-btn-icon-notext ui-btn-inline">Home</a>
+                <a id="home" href="#settings" class="ui-btn ui-shadow ui-corner-all ui-icon-gear ui-btn-icon-notext ui-btn-inline">Settings</a>
 
                 <!--Bookmarks-->
                 <a href="#bookmarkMenu" data-rel="popup" class="ui-btn ui-shadow ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">Bookmarks</a>
                 <div data-role="popup" id="bookmarkMenu">
-                    <ul id="bookmarkList" data-role="listview"  data-split-icon="delete" data-inset="true" style="min-width:210px;">
+                    <ul id="bookmarkList" data-role="listview" data-split-icon="delete" data-inset="true" style="min-width:210px;">
                         <li data-role="list-divider">Bookmarks</li>
-                        <li data-theme="b" data-icon="false"><a id="addBookmark" href="#">Add</a></li>
+                        <li data-theme="b" data-icon="false"><a id="addBookmark" href="#">Add</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -82,7 +90,8 @@
                     </ul>
                 </div>
 
-            </div><!--Button wrapper-->
+            </div>
+            <!--Button wrapper-->
 
             <!--Search-->
             <form id="searchform" class="ui-filterable" style="display:none;">
@@ -90,20 +99,47 @@
                 <!-- TODO: recalc status bar on filter -->
             </form>
 
-        </div><!--Top toolbar-->
-        
+        </div>
+        <!--Top toolbar-->
+
         <!--Main listview-->
         <div role="main" class="ui-content">
             <ul id="dirs" data-split-icon="gear" data-role="listview" data-filter="true" data-input="#searchbox" />
         </div>
-        
+
         <!--Status bar-->
         <div data-role="footer" data-position="fixed">
             <h4 id="footer">Powered by Go / JQuery Mobile</h4>
         </div>
 
-    </div><!--Main page-->
-    
+    </div>
+    <!--Main page-->
+
+    <div id="settings" data-role="page">
+        <div data-role="header">
+            <a href="#dirwalker" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-notext">Back</a>
+            <h4>Settings</h4>
+        </div>
+        <div role="main" class="ui-content">
+            <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <legend>Sort by</legend>
+                <input type="radio" name="settings-sort" id="settings-sort-name" value="Name" checked="checked">
+                <label for="settings-sort-name">Name</label>
+                <input type="radio" name="settings-sort" id="settings-sort-date" value="ModTime">
+                <label for="settings-sort-date">Date</label>
+                <input type="radio" name="settings-sort" id="settings-sort-size" value="Size">
+                <label for="settings-sort-size">Size</label>
+            </fieldset>
+            <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <legend>Sort direction</legend>
+                <input type="radio" name="settings-sortdir" id="settings-sortdir-asc" value="false" checked="checked">
+                <label for="settings-sortdir-asc">Ascending</label>
+                <input type="radio" name="settings-sortdir" id="settings-sortdir-desc" value="true">
+                <label for="settings-sortdir-desc">Descending</label>
+            </fieldset>
+        </div>
+    </div>
+
     <!--Main app file-->
     <script src="app.js"></script>
 </body>
