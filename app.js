@@ -76,13 +76,15 @@ $(document).on('pagecreate', '#dirwalker', function walk() {
             data: {
                 dir: path,
                 sort: $('input:radio[name=settings-sort]:checked').val() || 'Name',
-                sd: $('input:radio[name=settings-sortdir]:checked').val() || false
+                sd: $('input:radio[name=settings-sortdir]:checked').val() || 'asc'
             }
         }).then(setDir);
     }
 
-    dirs.on('click', 'li', function(e) {
-        if ($(this).attr('data-isdir') === 'true') fetchDir($(this).attr('data-path'));
+    dirs.on('click', 'a[href="#"]', function(e) {
+        var li = $(this).closest('li');
+        console.log('get',li.attr('data-path'));
+        if (li.attr('data-isdir') === 'true') fetchDir(li.attr('data-path'));
     });
 
     $('#crumbsList').on('click', 'li', function(e) {

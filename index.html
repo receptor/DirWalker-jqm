@@ -28,7 +28,8 @@
                 <p class="info">{{=it.ModTime}}</p>
                 <span class="ui-li-count">{{=it.Size}}</span>
             </a>
-            <a href="#"></a>
+            <!--Actions-->
+            <a href="#actionMenu" data-rel="popup" data-position-to="window">Actions</a>
         </li>
     </script>
 
@@ -105,6 +106,17 @@
         <!--Main listview-->
         <div role="main" class="ui-content">
             <ul id="dirs" data-split-icon="gear" data-role="listview" data-filter="true" data-input="#searchbox" />
+            <div data-role="popup" id="actionMenu">
+                <ul id="actionList" data-role="listview" data-inset="true" style="min-width:210px;">
+                    <li data-role="list-divider">Actions</li>
+                    <li data-icon="eye"><a id="actionView" href="#">View</a>
+                    <li data-icon="bullets"><a id="actionProperties" href="#">Properties</a>
+                    <li data-icon="plus"><a id="actionCopy" href="#">Copy</a>
+                    <li data-icon="arrow-r"><a id="actionMove" href="#">Move</a>
+                    <li data-icon="delete"><a id="actionDelete" href="#">Delete</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!--Status bar-->
@@ -132,13 +144,15 @@
             </fieldset>
             <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
                 <legend>Sort direction</legend>
-                <input type="radio" name="settings-sortdir" id="settings-sortdir-asc" value="false" checked="checked">
+                <input type="radio" name="settings-sortdir" id="settings-sortdir-asc" value="asc" checked="checked">
                 <label for="settings-sortdir-asc">Ascending</label>
-                <input type="radio" name="settings-sortdir" id="settings-sortdir-desc" value="true">
+                <input type="radio" name="settings-sortdir" id="settings-sortdir-desc" value="desc">
                 <label for="settings-sortdir-desc">Descending</label>
             </fieldset>
         </div>
     </div>
+
+
 
     <!--Main app file-->
     <script src="app.js"></script>
